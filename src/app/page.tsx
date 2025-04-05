@@ -48,7 +48,7 @@ export default function Home() {
       <section className="mb-12">
         <h3 className="text-2xl font-semibold mb-6 text-teal-700">All AI Tools</h3>
         {filteredTools.length === 0 ? (
-          <p className="text-gray-500">No tools found for "{searchTerm}"</p>
+          <p className="text-gray-500">No tools found for &quot;{searchTerm}&quot;</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {filteredTools.map((tool) => (

@@ -1,4 +1,3 @@
-import Navbar from '@/components/Navbar';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -26,17 +25,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* ✅ Only one AdSense script, inserted properly */}
+        {/* Google AdSense Script */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309739623901627"
           crossOrigin="anonymous"
         ></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content={(metadata.title ?? "Default Title") as string} />
+        <meta
+          property="og:description"
+          content={(metadata.description ?? "Default Description") as string}
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Optional: Uncomment if you want a Navbar */}
+        {/* Uncomment to use the Navbar */}
         {/* <Navbar /> */}
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );

@@ -1,26 +1,28 @@
-'use client';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 export default function AdComponent() {
   useEffect(() => {
     try {
-      // Try to re-render ads if script is already loaded
+      // Check if adsbygoogle exists and use it
       if (typeof window !== 'undefined' && window.adsbygoogle) {
         window.adsbygoogle.push({});
       }
     } catch (e) {
-      console.error('AdSense error:', e);
+      console.error('Failed to render AdSense ad:', e);
     }
   }, []);
 
   return (
-    <ins
-      className="adsbygoogle"
-      style={{ display: 'block' }}
-      data-ad-client="ca-pub-3309739623901627"
-      data-ad-slot="✅ YOUR_AD_SLOT_HERE"
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    ></ins>
+    <div className="ads-container">
+      {/* AdSense ad container */}
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block' }}
+        data-ad-client="ca-pub-3309739623901627"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      ></ins>
+    </div>
   );
 }
