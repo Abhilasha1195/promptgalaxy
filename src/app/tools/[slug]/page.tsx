@@ -59,3 +59,13 @@ export default async function ToolPage({ params }: { params: { slug: string } })
     </>
   );
 }
+export async function generateStaticParams() {
+  const filePath = path.join(process.cwd(), 'data', 'tools.json');
+  const file = await fs.readFile(filePath, 'utf-8');
+  const parsed = JSON.parse(file);
+  const tools: Tool[] = parsed.data || [];
+
+  return tools.map((tool) => ({
+    slug: tool.slug,
+  }));
+}
