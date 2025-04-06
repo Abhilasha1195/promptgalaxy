@@ -11,6 +11,12 @@ type Tool = {
   website?: string;
 };
 
+interface PageProps {
+  params: {
+    slug: string;
+  };
+}
+
 async function getToolBySlug(slug: string): Promise<Tool | null> {
   try {
     const filePath = path.join(process.cwd(), 'data', 'tools.json');
@@ -24,8 +30,7 @@ async function getToolBySlug(slug: string): Promise<Tool | null> {
   }
 }
 
-// ✅ Proper type and no promises in params
-export default async function ToolPage({ params }: { params: { slug: string } }) {
+export default async function ToolPage({ params }: PageProps) {
   const tool = await getToolBySlug(params.slug);
 
   if (!tool) return notFound();
@@ -50,7 +55,6 @@ export default async function ToolPage({ params }: { params: { slug: string } })
   );
 }
 
-// ✅ Required for static generation to work
 export async function generateStaticParams() {
   const filePath = path.join(process.cwd(), 'data', 'tools.json');
   const file = await fs.readFile(filePath, 'utf-8');
