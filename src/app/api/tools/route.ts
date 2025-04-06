@@ -16,7 +16,7 @@ async function readToolsFile(): Promise<Tool[]> {
   try {
     const file = await fs.readFile(filePath, 'utf-8');
     return JSON.parse(file);
-  } catch (error) {
+  } catch {
     console.warn('tools.json file not found or invalid. Returning an empty array.');
     return [];
   }
@@ -63,8 +63,8 @@ export async function POST(req: Request) {
     await writeToolsFile(tools);
 
     return NextResponse.json({ success: true, data: newTool });
-  } catch (error) {
-    console.error('Error in POST /api/tools:', error);
+  } catch (err) {
+    console.error('Error in POST /api/tools:', err); // Log the error for debugging
     return NextResponse.json(
       { success: false, error: 'Internal server error.' },
       { status: 500 }
@@ -77,8 +77,8 @@ export async function GET() {
   try {
     const tools = await readToolsFile();
     return NextResponse.json({ success: true, data: tools });
-  } catch (error) {
-    console.error('Error in GET /api/tools:', error);
+  } catch (err) {
+    console.error('Error in GET /api/tools:', err); // Log the error for debugging
     return NextResponse.json(
       { success: false, error: 'Failed to fetch tools.' },
       { status: 500 }
