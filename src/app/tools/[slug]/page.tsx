@@ -11,12 +11,6 @@ type Tool = {
   website?: string;
 };
 
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
-
 async function getToolBySlug(slug: string): Promise<Tool | null> {
   try {
     const filePath = path.join(process.cwd(), 'data', 'tools.json');
@@ -30,7 +24,8 @@ async function getToolBySlug(slug: string): Promise<Tool | null> {
   }
 }
 
-export default async function ToolPage({ params }: PageProps) {
+// ✅ Inline typing (no separate interface)
+export default async function ToolPage({ params }: { params: { slug: string } }) {
   const tool = await getToolBySlug(params.slug);
 
   if (!tool) return notFound();
