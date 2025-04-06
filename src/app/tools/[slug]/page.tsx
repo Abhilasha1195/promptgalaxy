@@ -30,8 +30,9 @@ export default async function ToolPage({ params }: { params: { slug: string } })
   const tool = await getToolBySlug(params.slug);
 
   if (!tool) {
-    notFound();
+    return notFound();
   }
+  
 
   return (
     <>
