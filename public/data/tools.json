@@ -1,13 +1,27 @@
 [
-    {
-      "name": "ChatGPT",
-      "slug": "chatgpt",
-      "description": "AI chatbot developed by OpenAI for conversation and productivity."
-    },
-    {
-      "name": "MidJourney",
-      "slug": "midjourney",
-      "description": "AI image generation tool that turns text prompts into art."
-    }
-  ]
-  
+  {
+    "name": "ChatGPT",
+    "slug": "chatgpt",
+    "description": "AI chatbot developed by OpenAI for conversation and productivity."
+  },
+  {
+    "name": "MidJourney",
+    "slug": "midjourney",
+    "description": "AI image generation tool that turns text prompts into art."
+  },
+  {
+    "name": "Jasper AI",
+    "slug": "jasper-ai",
+    "description": "AI writing assistant for marketing copy, emails, and more."
+  },
+  {
+    "name": "Runway ML",
+    "slug": "runway-ml",
+    "description": "Creative suite of AI tools for video, image, and audio editing."
+  },
+  {
+    "name": "Synthesia",
+    "slug": "synthesia",
+    "description": "AI video creation platform using avatars and voiceovers."
+  }
+]

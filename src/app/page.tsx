@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 
@@ -9,14 +9,6 @@ type Tool = {
   slug: string;
   description: string;
 };
-
-const toolStore: Tool[] = [
-  { name: 'ChatGPT', slug: 'chatgpt', description: 'AI chatbot developed by OpenAI for conversation and productivity.' },
-  { name: 'MidJourney', slug: 'midjourney', description: 'AI image generation tool that turns text prompts into art.' },
-  { name: 'Jasper AI', slug: 'jasper-ai', description: 'AI writing assistant for marketing copy, emails, and more.' },
-  { name: 'Runway ML', slug: 'runway-ml', description: 'Creative suite of AI tools for video, image, and audio editing.' },
-  { name: 'Synthesia', slug: 'synthesia', description: 'AI video creation platform using avatars and voiceovers.' }
-];
 
 const ToolCard = ({ tool }: { tool: Tool }) => (
   <Link key={tool.slug} href={`/tools/${tool.slug}`} passHref>
@@ -28,11 +20,36 @@ const ToolCard = ({ tool }: { tool: Tool }) => (
 );
 
 export default function Home() {
+  const [tools, setTools] = useState<Tool[]>([]);
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const filteredTools = toolStore.filter((tool) =>
+  // Load tools from the API
+  useEffect(() => {
+    const fetchTools = async () => {
+      try {
+        const res = await fetch('/api/tools');
+        if (!res.ok) {
+          throw new Error('Failed to fetch tools');
+        }
+        const data = await res.json();
+        setTools(data);
+      } catch (error) {
+        console.error('Error fetching tools:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTools();
+  }, []);
+
+  const filteredTools = tools.filter((tool) =>
     tool.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (loading) {
+    return <p className="text-center text-gray-400">Loading tools...</p>;
+  }
 
   return (
     <>
@@ -44,6 +61,7 @@ export default function Home() {
         <meta property="og:image" content="/og-image.png" />
         <meta property="og:url" content="https://promptgalaxy.vercel.app/" />
       </Head>
+
       <main className="min-h-screen bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e] text-white px-6 py-10">
         <h1 className="text-5xl font-extrabold text-center mb-10 tracking-tight text-white drop-shadow-lg">
           🚀 PromptGalaxy
