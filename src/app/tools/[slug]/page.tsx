@@ -1,5 +1,3 @@
-// /app/tools/[slug]/page.tsx
-
 import { notFound } from 'next/navigation';
 import fs from 'fs/promises';
 import path from 'path';
@@ -52,22 +50,4 @@ export default async function ToolPage({
       </div>
     </main>
   );
-}
-
-// Generate static params for dynamic routes
-export async function generateStaticParams() {
-  const filePath = path.join(process.cwd(), 'data', 'tools.json'); // Correct file path
-
-  try {
-    const file = await fs.readFile(filePath, 'utf-8');
-    const tools: Tool[] = JSON.parse(file); // Parse the file as an array
-
-    // Generate params for each tool
-    return tools.map((tool) => ({
-      slug: tool.slug,
-    }));
-  } catch (error) {
-    console.error('Error reading tools.json:', error);
-    return [];
-  }
 }
