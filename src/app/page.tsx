@@ -68,7 +68,8 @@ export default function Home() {
         <meta property="og:description" content="Search and discover AI tools on PromptGalaxy." />
         <meta property="og:image" content="/og-image.png" />
         <meta property="og:url" content="https://promptgalaxy.vercel.app/" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="icon" href="/favicon.png" />
+
 
       </Head>
 
