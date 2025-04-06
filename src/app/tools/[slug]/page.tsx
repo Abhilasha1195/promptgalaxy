@@ -15,8 +15,7 @@ async function getToolBySlug(slug: string): Promise<Tool | null> {
   try {
     const filePath = path.join(process.cwd(), 'data', 'tools.json');
     const file = await fs.readFile(filePath, 'utf-8');
-    const parsed = JSON.parse(file);
-    const tools: Tool[] = parsed.data || [];
+    const tools: Tool[] = JSON.parse(file); // Parse the file directly as an array
     return tools.find((t) => t.slug === slug) || null;
   } catch (error) {
     console.error('Error reading tools.json:', error);
@@ -27,10 +26,9 @@ async function getToolBySlug(slug: string): Promise<Tool | null> {
 export default async function ToolPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const resolvedParams = await params; // Resolve the Promise
-  const tool = await getToolBySlug(resolvedParams.slug);
+  const tool = await getToolBySlug(params.slug);
 
   if (!tool) return notFound();
 
@@ -56,11 +54,16 @@ export default async function ToolPage({
 
 export async function generateStaticParams() {
   const filePath = path.join(process.cwd(), 'data', 'tools.json');
-  const file = await fs.readFile(filePath, 'utf-8');
-  const parsed = JSON.parse(file);
-  const tools: Tool[] = parsed.data || [];
 
-  return tools.map((tool) => ({
-    slug: tool.slug,
-  }));
+  try {
+    const file = await fs.readFile(filePath, 'utf-8');
+    const tools: Tool[] = JSON.parse(file); // Parse the file directly as an array
+
+    return tools.map((tool) => ({
+      slug: tool.slug,
+    }));
+  } catch (error) {
+    console.error('Error reading tools.json:', error);
+    return [];
+  }
 }
