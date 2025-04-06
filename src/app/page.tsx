@@ -9,7 +9,7 @@ type Tool = {
   description: string;
 };
 
-let toolStore: Tool[] = [
+const toolStore: Tool[] = [
   { name: 'ChatGPT', slug: 'chatgpt', description: 'AI chatbot developed by OpenAI for conversation and productivity.' },
   { name: 'MidJourney', slug: 'midjourney', description: 'AI image generation tool that turns text prompts into art.' },
   { name: 'Jasper AI', slug: 'jasper-ai', description: 'AI writing assistant for marketing copy, emails, and more.' },
