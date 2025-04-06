@@ -9,7 +9,7 @@ type Tool = {
   description: string;
 };
 
-const toolStore: Tool[] = [
+const  toolStore: Tool[] = [
   { name: 'ChatGPT', slug: 'chatgpt', description: 'AI chatbot developed by OpenAI for conversation and productivity.' },
   { name: 'MidJourney', slug: 'midjourney', description: 'AI image generation tool that turns text prompts into art.' },
   { name: 'Jasper AI', slug: 'jasper-ai', description: 'AI writing assistant for marketing copy, emails, and more.' },
@@ -18,9 +18,9 @@ const toolStore: Tool[] = [
 ];
 
 export default function Home() {
-  const [search, setSearch] = useState('');
+  const  [search, setSearch] = useState('');
 
-  const filteredTools = toolStore.filter((tool) =>
+  const  filteredTools = toolStore.filter((tool) =>
     tool.name.toLowerCase().includes(search.toLowerCase())
   );
 
