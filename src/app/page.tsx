@@ -39,6 +39,10 @@ export default function Home() {
       <Head>
         <title>PromptGalaxy - Discover AI Tools</title>
         <meta name="description" content="Search and discover AI tools on PromptGalaxy." />
+        <meta property="og:title" content="PromptGalaxy - Discover AI Tools" />
+        <meta property="og:description" content="Search and discover AI tools on PromptGalaxy." />
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:url" content="https://promptgalaxy.vercel.app/" />
       </Head>
       <main className="min-h-screen bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e] text-white px-6 py-10">
         <h1 className="text-5xl font-extrabold text-center mb-10 tracking-tight text-white drop-shadow-lg">
