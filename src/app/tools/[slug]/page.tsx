@@ -11,26 +11,28 @@ type Tool = {
   website?: string;
 };
 
+// Function to fetch a tool by its slug
 async function getToolBySlug(slug: string): Promise<Tool | null> {
   try {
-    const filePath = path.join(process.cwd(), 'data', 'tools.json');
+    const filePath = path.join(process.cwd(), 'data', 'tools.json'); // Correct file path
     const file = await fs.readFile(filePath, 'utf-8');
-    const tools: Tool[] = JSON.parse(file); // Parse the file directly as an array
-    return tools.find((t) => t.slug === slug) || null;
+    const tools: Tool[] = JSON.parse(file); // Parse the file as an array
+    return tools.find((t) => t.slug === slug) || null; // Find the tool by slug
   } catch (error) {
     console.error('Error reading tools.json:', error);
     return null;
   }
 }
 
+// Main page component
 export default async function ToolPage({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string }; // Correct type for params
 }) {
-  const tool = await getToolBySlug(params.slug);
+  const tool = await getToolBySlug(params.slug); // Fetch the tool by slug
 
-  if (!tool) return notFound();
+  if (!tool) return notFound(); // Return 404 if the tool is not found
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e] text-white px-6 py-10">
@@ -52,13 +54,15 @@ export default async function ToolPage({
   );
 }
 
+// Generate static params for dynamic routes
 export async function generateStaticParams() {
-  const filePath = path.join(process.cwd(), 'data', 'tools.json');
+  const filePath = path.join(process.cwd(), 'data', 'tools.json'); // Correct file path
 
   try {
     const file = await fs.readFile(filePath, 'utf-8');
-    const tools: Tool[] = JSON.parse(file); // Parse the file directly as an array
+    const tools: Tool[] = JSON.parse(file); // Parse the file as an array
 
+    // Generate params for each tool
     return tools.map((tool) => ({
       slug: tool.slug,
     }));
