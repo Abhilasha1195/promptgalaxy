@@ -24,7 +24,12 @@ async function readToolsFile(): Promise<Tool[]> {
 
 // Helper function to write to tools.json
 async function writeToolsFile(tools: Tool[]): Promise<void> {
-  await fs.writeFile(filePath, JSON.stringify(tools, null, 2));
+  try {
+    await fs.writeFile(filePath, JSON.stringify(tools, null, 2));
+  } catch (err) {
+    console.error('Error writing to tools.json:', err);
+    throw new Error('Failed to write to tools.json');
+  }
 }
 
 // POST: Add a new tool
@@ -76,11 +81,11 @@ export async function POST(req: Request) {
 export async function GET() {
   try {
     const tools = await readToolsFile();
-    return NextResponse.json({ success: true, data: tools });
+    return NextResponse.json({ success: true, data: tools || [] }); // Ensure tools is always an array
   } catch (err) {
     console.error('Error in GET /api/tools:', err); // Log the error for debugging
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch tools.' },
+      { success: false, error: 'Failed to fetch tools.', data: [] }, // Return an empty array on error
       { status: 500 }
     );
   }

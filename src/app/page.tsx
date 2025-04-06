@@ -29,19 +29,27 @@ export default function Home() {
     const fetchTools = async () => {
       try {
         const res = await fetch('/api/tools');
-        if (!res.ok) {
-          throw new Error('Failed to fetch tools');
-        }
         const data = await res.json();
-        setTools(data);
+        console.log('Fetched tools data:', data);
+  
+        if (Array.isArray(data.data)) {
+          setTools(data.data);
+        } else {
+          console.error('Unexpected data format:', data);
+          setTools([]);
+        }
       } catch (error) {
         console.error('Error fetching tools:', error);
+        setTools([]);
       } finally {
         setLoading(false);
       }
     };
+  
     fetchTools();
   }, []);
+  
+
 
   const filteredTools = tools.filter((tool) =>
     tool.name.toLowerCase().includes(search.toLowerCase())
