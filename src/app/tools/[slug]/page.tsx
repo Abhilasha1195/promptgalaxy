@@ -32,7 +32,6 @@ export default async function ToolPage({ params }: { params: { slug: string } })
   if (!tool) {
     return notFound();
   }
-  
 
   return (
     <>
