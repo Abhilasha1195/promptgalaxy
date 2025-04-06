@@ -2,74 +2,83 @@
 
 import { useState } from 'react';
 
-type Tool = {
-  name: string;
-  slug: string;
-  description: string;
-};
+export default function SubmitToolPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    slug: '',
+    description: ''
+  });
 
-let toolStore: Tool[] = [
-  { name: 'ChatGPT', slug: 'chatgpt', description: 'AI chatbot developed by OpenAI for conversation and productivity.' },
-  { name: 'MidJourney', slug: 'midjourney', description: 'AI image generation tool that turns text prompts into art.' },
-  { name: 'Jasper AI', slug: 'jasper-ai', description: 'AI writing assistant for marketing copy, emails, and more.' },
-  { name: 'Runway ML', slug: 'runway-ml', description: 'Creative suite of AI tools for video, image, and audio editing.' },
-  { name: 'Synthesia', slug: 'synthesia', description: 'AI video creation platform using avatars and voiceovers.' }
-];
+  const [message, setMessage] = useState('');
 
-export default function SubmitPage() {
-  const [form, setForm] = useState({ name: '', slug: '', description: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.slug || !form.description) return;
+    setMessage('Submitting...');
 
-    toolStore.push({ ...form });
-    setForm({ name: '', slug: '', description: '' });
-    setSubmitted(true);
+    try {
+      const res = await fetch('/api/tools', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (res.ok) {
+        setMessage('✅ Tool submitted successfully!');
+        setFormData({ name: '', slug: '', description: '' });
+      } else {
+        setMessage('❌ Failed to submit the tool.');
+      }
+    } catch (error) {
+      console.error('Submit error:', error);
+      setMessage('⚠️ An error occurred.');
+    }
   };
 
   return (
     <main className="min-h-screen bg-black text-white px-6 py-12">
-      <h1 className="text-3xl font-bold mb-6">Submit a New AI Tool</h1>
-
-      <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
-        <div>
-          <label className="block mb-1">Tool Name</label>
-          <input
-            className="w-full p-2 rounded bg-white text-black"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1">Slug (e.g. chatgpt)</label>
-          <input
-            className="w-full p-2 rounded bg-white text-black"
-            value={form.slug}
-            onChange={(e) => setForm({ ...form, slug: e.target.value })}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1">Description</label>
-          <textarea
-            className="w-full p-2 rounded bg-white text-black"
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            required
-          />
-        </div>
-
-        <button type="submit" className="px-4 py-2 bg-green-600 rounded hover:bg-green-700">
-          Submit Tool
+      <h1 className="text-3xl font-bold mb-6">Submit a New Tool</h1>
+      <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
+        <input
+          type="text"
+          name="name"
+          placeholder="Tool Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className="w-full p-2 rounded bg-gray-800 text-white"
+        />
+        <input
+          type="text"
+          name="slug"
+          placeholder="tool-slug"
+          value={formData.slug}
+          onChange={handleChange}
+          required
+          className="w-full p-2 rounded bg-gray-800 text-white"
+        />
+        <textarea
+          name="description"
+          placeholder="Tool description"
+          value={formData.description}
+          onChange={handleChange}
+          required
+          rows={4}
+          className="w-full p-2 rounded bg-gray-800 text-white"
+        ></textarea>
+        <button
+          type="submit"
+          className="bg-green-500 hover:bg-green-600 text-black font-semibold px-4 py-2 rounded"
+        >
+          Submit
         </button>
+        {message && <p className="mt-2 text-sm text-green-400">{message}</p>}
       </form>
-
-      {submitted && <p className="mt-6 text-green-400">✅ Tool submitted successfully (in memory).</p>}
     </main>
   );
 }
