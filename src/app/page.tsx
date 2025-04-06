@@ -3,7 +3,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-const toolData = [
+type Tool = {
+  name: string;
+  slug: string;
+  description: string;
+};
+
+let toolStore: Tool[] = [
   { name: 'ChatGPT', slug: 'chatgpt', description: 'AI chatbot developed by OpenAI for conversation and productivity.' },
   { name: 'MidJourney', slug: 'midjourney', description: 'AI image generation tool that turns text prompts into art.' },
   { name: 'Jasper AI', slug: 'jasper-ai', description: 'AI writing assistant for marketing copy, emails, and more.' },
@@ -12,64 +18,42 @@ const toolData = [
 ];
 
 export default function Home() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [year] = useState<number>(new Date().getFullYear());
+  const [search, setSearch] = useState('');
 
-  const filteredTools = toolData.filter(tool =>
-    tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    tool.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTools = toolStore.filter((tool) =>
+    tool.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-green-100 via-blue-100 to-white text-gray-900 px-6 py-12">
-      <header className="flex justify-between items-center mb-12">
-        <h1 className="text-3xl font-bold text-teal-800">PromptGalaxy 🚀</h1>
-        <nav className="space-x-6 text-teal-700 font-medium">
-          <Link href="/tools" className="hover:underline">All Tools</Link>
-          <Link href="/categories" className="hover:underline">Categories</Link>
-          <Link href="/submit" className="hover:underline">Submit a Tool</Link>
-        </nav>
-      </header>
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white px-4 py-8">
+      <h1 className="text-4xl font-bold text-center mb-6">🌌 PromptGalaxy</h1>
 
-      <section className="text-center mb-16">
-        <h2 className="text-4xl font-extrabold mb-4 text-teal-800">Discover the Best AI Tools in the Universe</h2>
-        <p className="text-lg text-gray-600 mb-6">Explore curated tools for writing, design, productivity, and more.</p>
-        <div className="max-w-md mx-auto">
-          <input
-            type="text"
-            placeholder="Search tools..."
-            className="w-full p-3 rounded-xl bg-white text-gray-800 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </section>
+      <div className="max-w-md mx-auto mb-8">
+        <input
+          type="text"
+          placeholder="Search tools..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full p-3 rounded-lg text-black"
+        />
+      </div>
 
-      <section className="mb-12">
-        <h3 className="text-2xl font-semibold mb-6 text-teal-700">All AI Tools</h3>
-        {filteredTools.length === 0 ? (
-          <p className="text-gray-500">No tools found for &quot;{searchTerm}&quot;</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {filteredTools.map((tool) => (
-              <div key={tool.slug} className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow">
-                <h4 className="text-xl font-bold text-teal-800 mb-2">{tool.name}</h4>
-                <p className="text-gray-600 text-sm mb-4">{tool.description}</p>
-                <Link
-                  href={`/tools/${tool.slug}`}
-                  className="inline-block px-4 py-2 border border-teal-700 text-teal-700 rounded-full hover:bg-teal-700 hover:text-white transition"
-                >
-                  Explore
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 px-4">
+        {filteredTools.map((tool) => (
+          <Link key={tool.slug} href={`/tools/${tool.slug}`} passHref>
+            <div className="bg-white bg-opacity-10 hover:bg-opacity-20 p-6 rounded-2xl shadow-md cursor-pointer transition">
+              <h2 className="text-xl font-semibold mb-2">{tool.name}</h2>
+              <p className="text-gray-300 text-sm">{tool.description}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
 
-      <footer className="text-center text-sm text-gray-400 mt-24">
-        © {year} PromptGalaxy. Built to flip 🚀
-      </footer>
+      <div className="mt-12 text-center text-sm text-gray-500">
+        <Link href="/submit" className="underline hover:text-white">
+          Submit a new tool
+        </Link>
+      </div>
     </main>
   );
 }

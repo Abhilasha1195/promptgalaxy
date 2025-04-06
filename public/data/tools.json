@@ -1,0 +1,13 @@
+[
+    {
+      "name": "ChatGPT",
+      "slug": "chatgpt",
+      "description": "AI chatbot developed by OpenAI for conversation and productivity."
+    },
+    {
+      "name": "MidJourney",
+      "slug": "midjourney",
+      "description": "AI image generation tool that turns text prompts into art."
+    }
+  ]
+  
