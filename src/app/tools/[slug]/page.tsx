@@ -1,3 +1,5 @@
+// /app/tools/[slug]/page.tsx
+
 import { notFound } from 'next/navigation';
 import fs from 'fs/promises';
 import path from 'path';
@@ -7,17 +9,15 @@ type Tool = {
   name: string;
   slug: string;
   description: string;
+  website?: string;
 };
 
 async function getToolBySlug(slug: string): Promise<Tool | null> {
   try {
-    if (!slug || typeof slug !== 'string') {
-      return null;
-    }
-
-    const filePath = path.join(process.cwd(), 'tools.json');
+    const filePath = path.join(process.cwd(), 'data', 'tools.json'); // Adjust path if needed
     const file = await fs.readFile(filePath, 'utf-8');
-    const tools: Tool[] = JSON.parse(file);
+    const parsed = JSON.parse(file);
+    const tools: Tool[] = parsed.data || [];
     const tool = tools.find((t) => t.slug === slug);
     return tool || null;
   } catch (error) {
@@ -26,12 +26,11 @@ async function getToolBySlug(slug: string): Promise<Tool | null> {
   }
 }
 
-export default async function ToolPage({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = await params; // Resolve the Promise
-  const tool = await getToolBySlug(resolvedParams.slug);
+export default async function ToolPage({ params }: { params: { slug: string } }) {
+  const tool = await getToolBySlug(params.slug);
 
   if (!tool) {
-    return notFound();
+    notFound();
   }
 
   return (
@@ -44,6 +43,17 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">{tool.name}</h1>
           <p className="text-lg text-gray-300">{tool.description}</p>
+
+          {tool.website && (
+            <a
+              href={tool.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-6 text-blue-400 underline hover:text-blue-200"
+            >
+              Visit {tool.name}
+            </a>
+          )}
         </div>
       </main>
     </>
