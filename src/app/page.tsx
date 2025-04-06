@@ -68,6 +68,8 @@ export default function Home() {
         <meta property="og:description" content="Search and discover AI tools on PromptGalaxy." />
         <meta property="og:image" content="/og-image.png" />
         <meta property="og:url" content="https://promptgalaxy.vercel.app/" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+
       </Head>
 
       <main className="min-h-screen bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e] text-white px-6 py-10">
