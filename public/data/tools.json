@@ -2,26 +2,31 @@
   {
     "name": "ChatGPT",
     "slug": "chatgpt",
-    "description": "AI chatbot developed by OpenAI for conversation and productivity."
+    "description": "AI chatbot developed by OpenAI for conversation and productivity.",
+    "website": "https://chat.openai.com"
   },
   {
     "name": "MidJourney",
     "slug": "midjourney",
-    "description": "AI image generation tool that turns text prompts into art."
+    "description": "AI image generation tool that turns text prompts into art.",
+    "website": "https://www.midjourney.com"
   },
   {
     "name": "Jasper AI",
     "slug": "jasper-ai",
-    "description": "AI writing assistant for marketing copy, emails, and more."
+    "description": "AI writing assistant for marketing copy, emails, and more.",
+    "website": "https://www.jasper.ai"
   },
   {
     "name": "Runway ML",
     "slug": "runway-ml",
-    "description": "Creative suite of AI tools for video, image, and audio editing."
+    "description": "Creative suite of AI tools for video, image, and audio editing.",
+    "website": "https://runwayml.com"
   },
   {
     "name": "Synthesia",
     "slug": "synthesia",
-    "description": "AI video creation platform using avatars and voiceovers."
+    "description": "AI video creation platform using avatars and voiceovers.",
+    "website": "https://www.synthesia.io"
   }
 ]

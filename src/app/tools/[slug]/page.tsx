@@ -24,9 +24,13 @@ async function getToolBySlug(slug: string): Promise<Tool | null> {
   }
 }
 
-// ✅ Inline typing (no separate interface)
-export default async function ToolPage({ params }: { params: { slug: string } }) {
-  const tool = await getToolBySlug(params.slug);
+export default async function ToolPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const resolvedParams = await params; // Resolve the Promise
+  const tool = await getToolBySlug(resolvedParams.slug);
 
   if (!tool) return notFound();
 

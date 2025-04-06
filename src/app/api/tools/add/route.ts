@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const filePath = path.join(process.cwd(), 'tools.json');
+// Correct path to tools.json
+const filePath = path.join(process.cwd(), 'public', 'data', 'tools.json');
 
 export async function POST(request: NextRequest) {
   try {
