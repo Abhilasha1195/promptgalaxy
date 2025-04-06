@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     try {
       const file = await fs.readFile(filePath, 'utf-8');
       tools = JSON.parse(file);
-    } catch (error) {
+    } catch {
       console.warn('tools.json file not found or invalid. Creating a new one.');
     }
 
@@ -55,8 +55,7 @@ export async function POST(req: Request) {
     await fs.writeFile(filePath, JSON.stringify(tools, null, 2));
 
     return NextResponse.json({ success: true, data: newTool });
-  } catch (error) {
-    console.error('Error handling POST request:', error);
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Internal server error.' },
       { status: 500 }
@@ -71,8 +70,7 @@ export async function GET() {
     const tools: Tool[] = JSON.parse(file);
 
     return NextResponse.json({ success: true, data: tools });
-  } catch (error) {
-    console.error('Error reading tools.json:', error);
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Failed to fetch tools.' },
       { status: 500 }

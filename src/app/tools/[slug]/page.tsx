@@ -26,8 +26,9 @@ async function getToolBySlug(slug: string): Promise<Tool | null> {
   }
 }
 
-export default async function ToolPage({ params }: { params: { slug: string } }) {
-  const tool = await getToolBySlug(params.slug);
+export default async function ToolPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params; // Resolve the Promise
+  const tool = await getToolBySlug(resolvedParams.slug);
 
   if (!tool) {
     return notFound();
@@ -38,14 +39,11 @@ export default async function ToolPage({ params }: { params: { slug: string } })
       <Head>
         <title>{tool.name} - PromptGalaxy</title>
         <meta name="description" content={tool.description} />
-        <meta property="og:title" content={`${tool.name} - PromptGalaxy`} />
-        <meta property="og:description" content={tool.description} />
       </Head>
       <main className="min-h-screen bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e] text-white px-6 py-10">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">{tool.name}</h1>
           <p className="text-lg text-gray-300">{tool.description}</p>
-          <p className="mt-10 text-sm text-gray-500">Slug: <code>{tool.slug}</code></p>
         </div>
       </main>
     </>
