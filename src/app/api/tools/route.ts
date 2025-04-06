@@ -8,6 +8,7 @@ type Tool = {
   description: string;
 };
 
+// Path to the tools.json file
 const filePath = path.join(process.cwd(), 'tools.json');
 
 export async function POST(req: Request) {
@@ -25,11 +26,16 @@ export async function POST(req: Request) {
     }
 
     // Read the existing tools from the file
-    const file = await fs.readFile(filePath, 'utf-8');
-    const tools: Tool[] = JSON.parse(file);
+    let tools: Tool[] = [];
+    try {
+      const file = await fs.readFile(filePath, 'utf-8');
+      tools = JSON.parse(file);
+    } catch (error) {
+      console.warn('tools.json file not found or invalid. Creating a new one.');
+    }
 
     // Check for duplicate slug
-    const exists = tools.find((t) => t.slug === slug);
+    const exists = tools.find((t) => t.slug === slug.trim());
     if (exists) {
       return NextResponse.json(
         { success: false, error: 'Tool with this slug already exists.' },
@@ -53,6 +59,22 @@ export async function POST(req: Request) {
     console.error('Error handling POST request:', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error.' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET() {
+  try {
+    // Read the tools.json file
+    const file = await fs.readFile(filePath, 'utf-8');
+    const tools: Tool[] = JSON.parse(file);
+
+    return NextResponse.json({ success: true, data: tools });
+  } catch (error) {
+    console.error('Error reading tools.json:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch tools.' },
       { status: 500 }
     );
   }
