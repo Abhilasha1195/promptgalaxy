@@ -9,42 +9,72 @@ type Tool = {
   website?: string;
 };
 
-// Function to fetch a tool by its slug
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
 async function getToolBySlug(slug: string): Promise<Tool | null> {
   try {
-    const filePath = path.join(process.cwd(), 'data', 'tools.json'); // Correct file path
-    const file = await fs.readFile(filePath, 'utf-8');
-    const tools: Tool[] = JSON.parse(file); // Parse the file as an array
-    return tools.find((t) => t.slug === slug) || null; // Find the tool by slug
-  } catch (error) {
-    console.error('Error reading tools.json:', error);
+    const filePath = path.join(process.cwd(), 'data', 'tools.json');
+    const file = await fs.readFile(filePath, 'utf8');
+    const json = JSON.parse(file);
+    const tools: Tool[] = json.data || [];
+
+    return tools.find((tool) => tool.slug === slug) || null;
+  } catch (err) {
+    console.error('Failed to read tools.json:', err);
     return null;
   }
 }
 
-// Main page component
-export default async function ToolPage({
-  params,
-}: {
-  params: { slug: string }; // Correct type for params
-}) {
-  const tool = await getToolBySlug(params.slug); // Fetch the tool by slug
+export async function generateStaticParams() {
+  try {
+    const filePath = path.join(process.cwd(), 'data', 'tools.json');
+    const file = await fs.readFile(filePath, 'utf8');
+    const json = JSON.parse(file);
+    const tools: Tool[] = json.data || [];
 
-  if (!tool) return notFound(); // Return 404 if the tool is not found
+    return tools.map((tool) => ({ slug: tool.slug }));
+  } catch (err) {
+    console.error('Failed to generate static params:', err);
+    return [];
+  }
+}
+
+export async function generateMetadata({ params }: Props) {
+  const tool = await getToolBySlug(params.slug);
+  if (!tool) {
+    return { title: 'Tool Not Found - PromptGalaxy' };
+  }
+
+  return {
+    title: `${tool.name} - PromptGalaxy`,
+    description: tool.description,
+  };
+}
+
+export default async function ToolPage({ params }: Props) {
+  const tool = await getToolBySlug(params.slug);
+
+  if (!tool) {
+    notFound();
+  }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e] text-white px-6 py-10">
+    <main className="min-h-screen bg-white text-black p-10">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">{tool.name}</h1>
-        <p className="text-lg text-gray-300">{tool.description}</p>
+        <h1 className="text-4xl font-bold">{tool.name}</h1>
+        <p className="mt-4 text-lg">{tool.description}</p>
         {tool.website && (
           <a
             href={tool.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block mt-6 text-blue-400 underline hover:text-blue-200"
+            className="block mt-6 text-blue-600 underline"
           >
-            Visit {tool.name}
+            Visit Website
           </a>
         )}
       </div>
