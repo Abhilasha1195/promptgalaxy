@@ -5,11 +5,11 @@ import path from 'path';
 type Tool = {
   name: string;
   slug: string;
-  description: string;
+  description: string;  
 };
 
 // Path to the tools.json file
-const filePath = path.join(process.cwd(), 'public', 'data', 'tools.json');
+const filePath = path.join(process.cwd(), 'data', 'tools.json');
 
 // Helper function to read tools.json
 async function readToolsFile(): Promise<Tool[]> {

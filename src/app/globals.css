@@ -1,26 +1,73 @@
-@import "tailwindcss";
+/* styles/globals.css */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to bottom, #f9f9f9, #eaeaea); /* Light gradient */
+  color: #333; /* Darker text for better contrast */
+  line-height: 1.6;
+  padding: 0; /* Remove extra padding */
+}
+
+a {
+  color: #0078D4; /* Blue color for links */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: #0078D4; /* Blue button background */
+  border: none;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: #005A9E; /* Darker blue on hover */
+}
+
+input {
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  width: 100%;
+}
+
+input::placeholder {
+  color: #888;
+}
+@keyframes rocketFly {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(50vw, -50vh) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100vw, -100vh) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+#rocket {
+  animation: rocketFly 3s ease-in-out forwards;
 }

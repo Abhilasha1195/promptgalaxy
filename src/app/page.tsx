@@ -1,108 +1,214 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Head from 'next/head';
+import { useState } from 'react';
+import tools from '@/data/tools.json';
 
 type Tool = {
   name: string;
   slug: string;
   description: string;
+  url: string;
+  category: string;
+  image?: string; // ✅ optional image field
 };
 
-const ToolCard = ({ tool }: { tool: Tool }) => (
-  <Link key={tool.slug} href={`/tools/${tool.slug}`} passHref>
-    <div className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] hover:from-[#334155] hover:to-[#1e293b] p-6 rounded-2xl shadow-lg cursor-pointer transition duration-300 border border-white/10">
-      <h2 className="text-xl font-semibold mb-2 text-white">{tool.name}</h2>
-      <p className="text-gray-400 text-sm">{tool.description}</p>
-    </div>
-  </Link>
-);
+const typedTools: Tool[] = tools.flat();
 
 export default function Home() {
-  const [tools, setTools] = useState<Tool[]>([]);
-  const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Load tools from the API
-  useEffect(() => {
-    const fetchTools = async () => {
-      try {
-        const res = await fetch('/api/tools');
-        const data = await res.json();
-        console.log('Fetched tools data:', data);
-  
-        if (Array.isArray(data.data)) {
-          setTools(data.data);
-        } else {
-          console.error('Unexpected data format:', data);
-          setTools([]);
-        }
-      } catch (error) {
-        console.error('Error fetching tools:', error);
-        setTools([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchTools();
-  }, []);
-  
+  const categories = ['All', ...Array.from(new Set(typedTools.map((tool) => tool.category)))];
 
-
-  const filteredTools = tools.filter((tool) =>
-    tool.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  if (loading) {
-    return <p className="text-center text-gray-400">Loading tools...</p>;
-  }
+  const filteredTools: Tool[] = typedTools.filter((tool) => {
+    const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || tool.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <>
-      <Head>
-        <title>PromptGalaxy - Discover AI Tools</title>
-        <meta name="description" content="Search and discover AI tools on PromptGalaxy." />
-        <meta property="og:title" content="PromptGalaxy - Discover AI Tools" />
-        <meta property="og:description" content="Search and discover AI tools on PromptGalaxy." />
-        <meta property="og:image" content="/og-image.png" />
-        <meta property="og:url" content="https://promptgalaxy.vercel.app/" />
-        <link rel="icon" href="/favicon.png" />
-
-
-      </Head>
-
-      <main className="min-h-screen bg-gradient-to-br from-[#0f0f1a] to-[#1a1a2e] text-white px-6 py-10">
-        <h1 className="text-5xl font-extrabold text-center mb-10 tracking-tight text-white drop-shadow-lg">
-          🚀 PromptGalaxy
+    <main
+      style={{
+        fontFamily: 'Inter, sans-serif',
+        color: '#333',
+        backgroundColor: '#f9f9f9',
+        minHeight: '100vh',
+      }}
+    >
+      {/* Hero Section */}
+      <header
+        style={{
+          background: 'linear-gradient(90deg, #0078D4, #005A9E)',
+          color: '#fff',
+          textAlign: 'center',
+          padding: '4rem 2rem',
+        }}
+      >
+        <h1 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+          PromptGalaxy
         </h1>
-
-        <div className="max-w-xl mx-auto mb-12">
+        <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
+          Discover the best AI tools to boost your productivity and creativity.
+        </p>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '1rem',
+            flexWrap: 'wrap',
+          }}
+        >
           <input
             type="text"
-            placeholder="🔍 Search for an AI tool..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            aria-label="Search for AI tools"
-            className="w-full px-5 py-3 text-lg rounded-xl bg-white text-black placeholder-gray-500 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Search AI tools..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              padding: '0.8rem 1rem',
+              borderRadius: '8px',
+              border: 'none',
+              width: '300px',
+              outline: 'none',
+              fontSize: '1rem',
+            }}
           />
         </div>
+      </header>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredTools.length > 0 ? (
-            filteredTools.map((tool) => <ToolCard key={tool.slug} tool={tool} />)
-          ) : (
-            <p className="text-center text-gray-400">No tools found. Try a different search.</p>
-          )}
-        </div>
+      {/* Category Filters */}
+      <div
+        style={{
+          maxWidth: '1200px',
+          margin: '2rem auto',
+          padding: '0 1rem',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          justifyContent: 'center',
+        }}
+      >
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            style={{
+              padding: '0.5rem 1rem',
+              borderRadius: '20px',
+              border: '1px solid #0078D4',
+              backgroundColor: selectedCategory === category ? '#0078D4' : '#fff',
+              color: selectedCategory === category ? '#fff' : '#0078D4',
+              cursor: 'pointer',
+              fontSize: '0.95rem',
+              fontWeight: 'bold',
+            }}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
 
-        <div className="mt-16 text-center">
-          <Link href="/submit" className="text-sm text-blue-400 underline hover:text-blue-200 transition">
-            ✨ Submit a new tool
-          </Link>
+      {/* Tools Grid */}
+      <section
+        style={{
+          maxWidth: '1200px',
+          margin: '2rem auto',
+          padding: '0 1rem',
+        }}
+      >
+        <h2
+          style={{
+            fontSize: '2rem',
+            marginBottom: '1.5rem',
+            color: '#0078D4',
+            textAlign: 'center',
+          }}
+        >
+          Explore Tools
+        </h2>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '2rem',
+          }}
+        >
+          {filteredTools.map((tool: Tool) => (
+            <div
+              key={tool.slug}
+              style={{
+                padding: '1.5rem',
+                border: '1px solid #ddd',
+                borderRadius: '12px',
+                backgroundColor: '#fff',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                cursor: 'pointer',
+                boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = 'scale(1.05)';
+                el.style.boxShadow = '0 6px 15px rgba(0, 0, 0, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = 'scale(1)';
+                el.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)';
+              }}
+            >
+              {/* Tool Image */}
+              {tool.image && (
+                <img
+                  src={tool.image}
+                  alt={`${tool.name} logo`}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/fallback-image.png';
+                  }}
+                  style={{
+                    width: '100%',
+                    height: '140px',
+                    objectFit: 'contain',
+                    marginBottom: '1rem',
+                  }}
+                />
+              )}
+
+              {/* Tool Name */}
+              <h3
+                style={{
+                  fontSize: '1.5rem',
+                  marginBottom: '0.8rem',
+                  color: '#0078D4',
+                }}
+              >
+                <Link href={`/tools/${tool.slug}`} style={{ textDecoration: 'none', color: '#0078D4' }}>
+                  {tool.name}
+                </Link>
+              </h3>
+
+              {/* Tool Description */}
+              <p style={{ color: '#555', marginBottom: '1rem', fontSize: '1rem' }}>
+                {tool.description}
+              </p>
+
+              {/* Visit Button */}
+              <a
+                href={tool.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#0078D4',
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                }}
+              >
+                Visit Website →
+              </a>
+            </div>
+          ))}
         </div>
-      </main>
-    </>
+      </section>
+    </main>
   );
 }
