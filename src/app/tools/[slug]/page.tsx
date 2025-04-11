@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import tools from '@/data/tools.json';
-import InteractiveLink from '@/components/InteractiveLink'; // Import the client component
+import InteractiveLink from '@/components/InteractiveLink'; // client component
+import Image from 'next/image';
 
 type Tool = {
   name: string;
@@ -10,16 +11,14 @@ type Tool = {
   category: string;
   image?: string;
 };
-
-type Props = {
-  params: {
-    slug: string;
-  };
+type PageProps = {
+  params: Promise<{ slug: string }>;
 };
 
-// Dynamic SEO Metadata
-export async function generateMetadata({ params }: Props) {
-  const tool = (tools as Tool[]).find((t) => t.slug === params.slug);
+// ✅ Correct `generateMetadata` signature
+export async function generateMetadata({ params }: PageProps) {
+  const resolvedParams = await params;
+  const tool = (tools as Tool[]).find((t) => t.slug === resolvedParams.slug);
 
   if (!tool) {
     return {
@@ -55,34 +54,27 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-// Tool Page Component
-export default function ToolPage({ params }: Props) {
-  const tool = (tools as Tool[]).find((t) => t.slug === params.slug);
+// ✅ Correct component signature
+export default async function ToolPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const tool = (tools as Tool[]).find((t) => t.slug === resolvedParams.slug);
   if (!tool) return notFound();
 
   return (
     <main style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: '2.5rem', color: '#0078D4', marginBottom: '1rem' }}>
-        {tool.name}
-      </h1>
-      <p style={{ fontSize: '1.2rem', color: '#444', marginBottom: '1rem' }}>
-        {tool.description}
-      </p>
+      <h1 style={{ fontSize: '2.5rem', color: '#0078D4', marginBottom: '1rem' }}>{tool.name}</h1>
+      <p style={{ fontSize: '1.2rem', color: '#444', marginBottom: '1rem' }}>{tool.description}</p>
       <p style={{ marginBottom: '1rem', fontWeight: 'bold' }}>
         Category: <span style={{ color: '#0078D4' }}>{tool.category}</span>
       </p>
 
-      {/* Tool Image with fallback */}
       <div style={{ marginBottom: '1rem' }}>
-        <img
+        <Image
           src={tool.image || '/fallback-image.png'}
           alt={`${tool.name} logo`}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/fallback-image.png';
-          }}
+          width={800} // Specify width
+          height={200} // Specify height
           style={{
-            width: '100%',
-            height: '200px',
             objectFit: 'contain',
             borderRadius: '8px',
             backgroundColor: '#f0f0f0',
@@ -90,27 +82,9 @@ export default function ToolPage({ params }: Props) {
         />
       </div>
 
-      {/* Use the InteractiveLink component */}
       <InteractiveLink href={tool.url} ariaLabel={`Visit ${tool.name}`}>
         Visit {tool.name}
       </InteractiveLink>
-
-      {/* JSON-LD Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            name: tool.name,
-            description: tool.description,
-            applicationCategory: tool.category,
-            url: tool.url,
-            image: tool.image || 'https://promptgalaxy.vercel.app/default-og.png',
-            operatingSystem: "All",
-          }),
-        }}
-      ></script>
     </main>
   );
 }

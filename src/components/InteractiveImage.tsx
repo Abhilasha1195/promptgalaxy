@@ -1,24 +1,18 @@
 "use client"; // Ensures this component runs on the client side
 
-type InteractiveImageProps = {
-  src: string;
-  alt: string;
-};
+import Image from 'next/image';
 
-export default function InteractiveImage({ src, alt }: InteractiveImageProps) {
+export default function InteractiveImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <img
+    <Image
       src={src}
       alt={alt}
-      onError={(e) => {
-        (e.target as HTMLImageElement).src = "/fallback-image.png"; // Fallback image
-      }}
+      width={800} // Specify width
+      height={200} // Specify height
       style={{
-        width: "100%",
-        height: "200px",
-        objectFit: "contain",
-        borderRadius: "8px",
-        backgroundColor: "#f0f0f0",
+        objectFit: 'contain',
+        borderRadius: '8px',
+        backgroundColor: '#f0f0f0',
       }}
     />
   );

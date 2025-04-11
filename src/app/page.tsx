@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import tools from '@/data/tools.json';
+import Image from 'next/image';
 
 type Tool = {
   name: string;
@@ -158,12 +159,12 @@ export default function Home() {
             >
               {/* Tool Image */}
               {tool.image && (
-                <img
+                <Image
                   src={tool.image}
                   alt={`${tool.name} logo`}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/fallback-image.png';
-                  }}
+                  width={300}
+                  height={140}
+                  onError={() => '/fallback-image.png'}
                   style={{
                     width: '100%',
                     height: '140px',
@@ -208,6 +209,28 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Example Section */}
+      <section
+        style={{
+          maxWidth: '1200px',
+          margin: '2rem auto',
+          padding: '0 1rem',
+          textAlign: 'center',
+        }}
+      >
+        <h1>Welcome to PromptGalaxy</h1>
+        <Image
+          src="/example-image.png"
+          alt="Example Image"
+          width={800}
+          height={400}
+          style={{
+            objectFit: 'cover',
+            borderRadius: '8px',
+          }}
+        />
       </section>
     </main>
   );

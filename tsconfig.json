@@ -23,7 +23,7 @@
     // ✅ ADD THESE TWO LINES BELOW
     "baseUrl": "src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./*"]
     }
   },
   "include": [
